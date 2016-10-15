@@ -16,7 +16,7 @@ namespace MVC5Course.Models
         // GET: Products
         public ActionResult Index()
         {
-            return View(db.Product.ToList());
+            return View(db.Product.OrderByDescending(p=> p.ProductId).Take(10).ToList());
         }
 
         // GET: Products/Details/5
