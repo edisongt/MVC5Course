@@ -7,12 +7,25 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVC5Course.Models;
+using MVC5Course.Models.ViewModels;
 
 namespace MVC5Course.Controllers
 {
     public class ClientsController : Controller
     {
         private FabricsEntities db = new FabricsEntities();
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(ClientLoginViewModel client)
+        {
+            return View("LoginResult",client);
+        }
+
 
         // GET: Clients
         public ActionResult Index(string search)
