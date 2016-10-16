@@ -7,9 +7,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-
 namespace MVC5Course.Models
 {
     using System;
@@ -24,28 +21,11 @@ namespace MVC5Course.Models
         }
     
         public int ClientId { get; set; }
-        [Required]
-        [StringLength(10,ErrorMessage = "{0}最大不得超過{1}個字元")]
-        [DisplayName("名")]
         public string FirstName { get; set; }
-        [Required]
-        [DisplayName("中間名")]
-        [StringLength(5, ErrorMessage = "{0}最大不得超過{1}個字元")]
         public string MiddleName { get; set; }
-        [DisplayName("姓")]
-        [Required]
-        [StringLength(5, ErrorMessage = "{0}最大不得超過{1}個字元")]
         public string LastName { get; set; }
-        [Required]
-        [DisplayName("性別")]
-        [RegularExpression("[MF]",ErrorMessage = "Gender 欄位只能輸入 M或F")]
         public string Gender { get; set; }
-        [DisplayName("生日")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> DateOfBirth { get; set; }
-        [DisplayName("信用評等")]
-        [Range(0,9,ErrorMessage = "{0}必須介於0~9")]
         public Nullable<double> CreditRating { get; set; }
         public string XCode { get; set; }
         public Nullable<int> OccupationId { get; set; }
