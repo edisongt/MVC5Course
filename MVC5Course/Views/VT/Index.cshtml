@@ -1,0 +1,50 @@
+﻿
+@{
+    int[] data = new[] { 1, 2, 3, 4, 5 };
+}
+
+
+@section scripts{
+    <script>
+        alert('ok')
+    </script>
+}
+@foreach (var item in data)
+{
+    @item
+}
+
+
+@foreach (var item in data)
+{
+    @(item + " ");
+}
+
+
+<ul>
+    @foreach (var item in data)
+    {
+        <li>@(item)</li>
+    }
+</ul>
+
+
+@Html.ActionLink("",,,,)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

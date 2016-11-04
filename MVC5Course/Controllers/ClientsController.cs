@@ -11,9 +11,9 @@ using MVC5Course.Models.ViewModels;
 
 namespace MVC5Course.Controllers
 {
-    public class ClientsController : Controller
+    public class ClientsController : BaseController
     {
-        private FabricsEntities db = new FabricsEntities();
+        
 
         public ActionResult Login()
         {
@@ -28,13 +28,17 @@ namespace MVC5Course.Controllers
 
 
         // GET: Clients
-        public ActionResult Index(string search)
+        public ActionResult Index(string search ,int? CreditRating)
         {
             var client = db.Client.Include(c => c.Occupation).OrderByDescending(c => c.ClientId).Take(10);
+
             if (!string.IsNullOrEmpty(search))
             {
                 client = client.Where(p => p.FirstName.Contains(search));
             }
+
+            var options = (from p in db.Client select p.CreditRating).Distinct().OrderByDescending(p => p).ToList();
+            ViewBag.CreditRating = new SelectList(options);
             return View(client);
         }
 
@@ -108,13 +112,10 @@ namespace MVC5Course.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(
-            [Bind(
-                Include =
-                    "ClientId,FirstName,MiddleName,LastName,Gender,DateOfBirth,CreditRating,XCode,OccupationId,TelephoneNumber,Street1,Street2,City,ZipCode,Longitude,Latitude,Notes"
-                )] Client client)
+        public ActionResult Edit(int id , FormCollection form)
         {
-            if (ModelState.IsValid)
+            var client = db.Client.Find(id);
+            if (TryUpdateModel(client,null,null,new string[] {"IsAdmin"}))
             {
                 db.Entry(client).State = EntityState.Modified;
                 db.SaveChanges();

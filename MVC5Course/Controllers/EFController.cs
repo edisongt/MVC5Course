@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVC5Course.Models;
+using MVC5Course.Models.ViewModels;
 
 namespace MVC5Course.Controllers
 {
@@ -75,26 +77,19 @@ namespace MVC5Course.Controllers
                 {
                     foreach (var vErrors in entityErrors.ValidationErrors)
                     {
-                        throw new DbEntityValidationException(vErrors.PropertyName+"發生錯誤"+vErrors.ErrorMessage);
+                        throw new DbEntityValidationException(vErrors.PropertyName + "發生錯誤" + vErrors.ErrorMessage);
                     }
-                }                
+                }
             }
             return RedirectToAction("Index");
         }
-
+        
 
         public ActionResult Add20Percent()
         {
-            var data = db.Product.Where(p => p.ProductName.Contains("White"));
-            foreach (var item in data)
-            {
-                if (item.Price.HasValue)
-                {
-                    item.Price = item.Price * 1.2m;
-                }
-            }
+            string str = "%White%";
+            db.Database.ExecuteSqlCommand("UPDATE dbo.Product SET Price=Price*1.2 WHERE ProductName LIKE @p0", str);
 
-            db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -102,6 +97,28 @@ namespace MVC5Course.Controllers
         {
             var data = db.vw_ClientContribution.Take(10);
             return View(data);
+        }
+
+        public ActionResult ClientContribution2(string KEYWORD = "MARY")
+        {
+          var data = db.Database.SqlQuery<ClientContributionViewModel>(@"SELECT
+         c.ClientId,
+         c.FirstName,
+         c.LastName,
+         (SELECT SUM(o.OrderTotal)
+
+          FROM[dbo].[Order] o
+
+          WHERE o.ClientId = c.ClientId) as OrderTotal
+
+    FROM
+        [dbo].[Client] as c ", KEYWORD);
+            return View(data);
+        }
+
+        public ActionResult ClientContribution3(string KEYWORD ="Mary")
+        {            
+            return View(db.usp_GetClientContribution(KEYWORD));
         }
     }
 }
